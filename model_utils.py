@@ -21,7 +21,11 @@ import tqdm
 from sklearn.metrics import cohen_kappa_score
 
 
-def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_inception=False):
+def train_model(model, 
+                dataloaders, criterion, 
+                optimizer, num_epochs=25, 
+                is_inception=False,
+                device='cuda'):
     since = time.time()
 
     val_acc_history = []
@@ -31,7 +35,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
     best_acc = 0.0
     best_kappa = 0.0
     
-    for epoch in tqdm.tqdm_notebook(range(num_epochs)):
+    for _ in tqdm.tqdm_notebook(range(num_epochs)):
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
             if phase == 'train':
@@ -128,7 +132,7 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
     if model_name == "resnet":
         """ Resnet18
         """
-        model_ft = models.resnet18(pretrained=use_pretrained)
+        model_ft = models.resnet101(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.fc.in_features
         model_ft.fc = nn.Linear(num_ftrs, num_classes)
